@@ -13,5 +13,12 @@ namespace MaVilla_API.Controllers
         {
             return VillaStore.villaList;
         }
+
+        [HttpGet("id:int")]
+        public VillaDto GetVilla(int id)
+        {
+            return VillaStore.villaList.FirstOrDefault(v => v.Id == id);
+        }
+
     }
 }
