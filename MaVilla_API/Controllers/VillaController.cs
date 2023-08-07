@@ -15,7 +15,7 @@ namespace MaVilla_API.Controllers
             return Ok(VillaStore.villaList);
         }
 
-        [HttpGet("id:int")]
+        [HttpGet("id:int", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -36,5 +36,24 @@ namespace MaVilla_API.Controllers
             return Ok(villa);
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<VillaDto> CrearVilla([FromBody] VillaDto villaDto)
+        {
+            if(villaDto == null)
+            {
+                return BadRequest(villaDto);
+            }
+            if(villaDto.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            villaDto.Id = VillaStore.villaList.OrderByDescending(v => v.Id).FirstOrDefault().Id + 1;
+            VillaStore.villaList.Add(villaDto);
+
+            return CreatedAtRoute("GetVilla", new {id = villaDto.Id}, villaDto);
+        }
     }
 }
