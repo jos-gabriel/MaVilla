@@ -9,10 +9,20 @@ namespace MaVilla_API.Controllers
     [ApiController]
     public class VillaController : ControllerBase
     {
+
+        private readonly ILogger <VillaController> _logger;
+        public VillaController(ILogger<VillaController> logger)
+        {
+
+            _logger = logger;
+
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDto>> GetVillas()
         {
+            _logger.LogInformation("Obtener las villas");
             return Ok(VillaStore.villaList);
         }
 
@@ -24,6 +34,7 @@ namespace MaVilla_API.Controllers
         {
             if(id == 0)
             {
+                _logger.LogError("Error al traer la villa con ID " + id);
                 return BadRequest();
             }
 
